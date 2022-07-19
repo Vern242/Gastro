@@ -1,10 +1,10 @@
 # Gastro - Web application
 
-__npm start__     to start the application
+__npm start__     while inside main folder to start the application
 
-__node server.js__      to start the server
+__node server.js__      while inside server folder to start the server
 
-This app uses React for frontend, Node.js for server and Prisma as an ORM. The database used is Microsoft SQL Server 2017.
+This app uses React for frontend, Express with Node.js for server and Prisma as an ORM. The database used is Microsoft SQL Server 2017.
 
 # Getting Started with Create React App
 
