@@ -4,6 +4,8 @@ __npm start__     to start the application
 
 __node server.js__      to start the server
 
+This app uses React for frontend, Node.js for server and Prisma as an ORM. The database used is Microsoft SQL Server 2017.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
