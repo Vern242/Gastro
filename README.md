@@ -1,3 +1,9 @@
+# Gastro - Web application
+
+__npm start__     to start the application
+
+__node server.js__      to start the server
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
