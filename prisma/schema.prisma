@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id                  Int       @id(map: "PK_Category") @default(autoincrement())
+  categoryName        String    @unique @db.VarChar(255)
+  categoryDescription String    @db.VarChar(255)
+  Product             Product[]
+}
+
+model Customer {
+  id        Int     @id(map: "PK_Customer") @default(autoincrement())
+  name      String  @db.VarChar(255)
+  street    String  @db.VarChar(255)
+  town      String  @db.VarChar(255)
+  postCode  String  @db.NVarChar(6)
+  email     String  @unique(map: "UK_email") @db.VarChar(255)
+  telephone String  @unique(map: "UK_telephone") @db.VarChar(255)
+  password  String  @db.VarChar(255)
+  Order     Order[]
+}
+
+model Order {
+  id            Int             @id(map: "PK_Order") @default(autoincrement())
+  customerId    Int
+  comment       String?         @db.VarChar(255)
+  totalPrice    Float           @db.Money
+  date          DateTime        @db.DateTime
+  orderStatusId Int
+  Customer      Customer        @relation(fields: [customerId], references: [id], onUpdate: NoAction, map: "FK_Order_Customer")
+  OrderStatus   OrderStatus     @relation(fields: [orderStatusId], references: [id], onUpdate: NoAction, map: "FK_Order_OrderStatus")
+  Change        Change[]
+  OrderProducts OrderProducts[]
+}
+
+model OrderProducts {
+  id              Int     @id(map: "PK_OrderProducts") @default(autoincrement())
+  orderId         Int
+  productId       Int
+  productQuantity Int
+  Order           Order   @relation(fields: [orderId], references: [id], onUpdate: NoAction, map: "FK_OrderProducts_Order")
+  Product         Product @relation(fields: [productId], references: [id], onUpdate: NoAction, map: "FK_OrderProducts_Product")
+}
+
+model OrderStatus {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique @db.VarChar(255)
+  Order Order[]
+}
+
+model OperationTimes {
+  id    Int      @id @default(autoincrement())
+  day   String   @unique @db.VarChar(255)
+  start DateTime @db.Time
+  end   DateTime @db.Time
+}
+
+model Product {
+  id                 Int             @id(map: "PK_Product") @default(autoincrement())
+  categoryId         Int
+  productName        String          @unique @db.VarChar(255)
+  productPrice       Float           @db.Money
+  productDescription String          @db.VarChar(255)
+  Category           Category        @relation(fields: [categoryId], references: [id], onUpdate: NoAction, map: "FK_Product_Category")
+  OrderProducts      OrderProducts[]
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B613C791543") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
+}
+
+model Change {
+  id          Int    @id @default(autoincrement())
+  orderId     Int
+  workerId    Int
+  description String @db.VarChar(255)
+  Order       Order  @relation(fields: [orderId], references: [id], onUpdate: NoAction, map: "FK_Change_Order")
+  Worker      Worker @relation(fields: [workerId], references: [id], onUpdate: NoAction, map: "FK_Change_Worker")
+}
+
+model Worker {
+  id             Int      @id(map: "PK_Worker") @default(autoincrement())
+  username       String   @unique @db.VarChar(255)
+  password       String   @db.VarChar(255)
+  name           String   @db.VarChar(255)
+  canEditMenu    Boolean
+  canEditWorkers Boolean
+  isActive       Boolean
+  isAdmin        Boolean
+  Change         Change[]
+}
